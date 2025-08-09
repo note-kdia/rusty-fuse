@@ -15,7 +15,7 @@ It includes a sample filesystem that uses the crate to pass all system calls thr
 This is a work-in-progress. Bug reports, pull requests, and other feedback are welcome!
 
 Some random notes on the implementation:
-* The trait that filesystems will implement is called `FilesystemMT`, and instead of the FUSE crate's convention of having methods return void and including a "reply" parameter, the methods return their values. This feels more idiomatic to me. They also take `&Path` arguments instead of inode numbers.
+* The trait that filesystems will implement is called `RustyFilesystem`, and instead of the FUSE crate's convention of having methods return void and including a "reply" parameter, the methods return their values. This feels more idiomatic to me. They also take `&Path` arguments instead of inode numbers.
 * Currently, only the following calls are dispatched to other threads:
     * read
     * write
