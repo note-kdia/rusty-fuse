@@ -3,7 +3,10 @@
 set -e
 
 cd example
-mkdir mount
+
+fusermount -u mount || echo "fusermount OK"
+
+mkdir -p mount
 cargo build
 cargo run src mount &
 
