@@ -155,7 +155,13 @@ impl<T: RustyFilesystem + Sync + Send + 'static> fuser::Filesystem for FuseMT<T>
         );
     }
 
-    fn getattr(&mut self, req: &fuser::Request<'_>, ino: u64, reply: fuser::ReplyAttr) {
+    fn getattr(
+        &mut self,
+        req: &fuser::Request<'_>,
+        ino: u64,
+        _fh: Option<u64>,
+        reply: fuser::ReplyAttr,
+    ) {
         let path = get_path!(self, ino, reply);
         debug!("getattr: {:?}", path);
         match self.target.getattr(req.info(), &path, None) {
