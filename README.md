@@ -1,7 +1,6 @@
-# FUSE-MT
+# rusty-fuser
 
-![Build Status](https://github.com/wfraser/fuse-mt/workflows/Cargo%20Checks/badge.svg)
-[![Crates.io](https://img.shields.io/crates/v/fuse_mt.svg)](https://crates.io/crates/fuse_mt)
+fork of [fuse-MT](https://github.com/wfraser/fuse-mt), customized for my project.
 
 [Documentation](https://docs.rs/fuse_mt)
 
