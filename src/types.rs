@@ -130,6 +130,15 @@ pub struct CallbackResult {
     pub(crate) _private: std::marker::PhantomData<()>,
 }
 
+impl CallbackResult {
+    /// Test utility.
+    pub fn for_test_purpose_only_do_not_use_this_in_another_context_new() -> Self {
+        Self {
+            _private: std::marker::PhantomData,
+        }
+    }
+}
+
 /// This trait must be implemented to implement a filesystem with FuseMT.
 pub trait RustyFilesystem {
     /// Called on mount, before any other function.
