@@ -1,7 +1,7 @@
 [package]
-name = "fuse_mt"
-version = "0.6.1"
-authors = ["William R. Fraser <wfraser@codewise.org>"]
+name = "rusty-fuse"
+version = "0.7.0"
+authors = ["William R. Fraser <wfraser@codewise.org>", "Daiki Naruse <naruse147@gmail.com>"]
 repository = "https://github.com/wfraser/fuse-mt"
 description = "A higher-level FUSE filesystem library with multi-threading and inode->path translation."
 categories = ["filesystem"]

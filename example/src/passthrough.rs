@@ -1,6 +1,6 @@
 // PassthroughFS :: A filesystem that passes all calls through to another underlying filesystem.
 //
-// Implemented using fuse_mt::FilesystemMT.
+// Implemented using rusty_fuser::RustyFilesystem.
 //
 // Copyright (c) 2016-2022 by William R. Fraser
 //
@@ -17,7 +17,7 @@ use std::time::{Duration, SystemTime};
 use crate::libc_extras::libc;
 use crate::libc_wrappers;
 
-use fuse_mt::*;
+use rusty_fuse::*;
 
 pub struct PassthroughFS {
     pub target: OsString,
