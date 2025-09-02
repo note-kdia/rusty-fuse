@@ -250,15 +250,7 @@ impl RustyFilesystem for PassthroughFS {
         libc_wrappers::close(fh)
     }
 
-    fn read(
-        &self,
-        _req: RequestInfo,
-        path: &Path,
-        fh: u64,
-        offset: u64,
-        size: u32,
-        callback: impl FnOnce(ResultSlice<'_>) -> CallbackResult,
-    ) -> CallbackResult {
+    fn read(&self, _req: RequestInfo, path: &Path, fh: u64, offset: u64, size: u32) -> ResultRead {
         debug!("read: {:?} {:#x} @ {:#x}", path, size, offset);
         let mut file = unsafe { UnmanagedFile::new(fh) };
 
@@ -266,7 +258,7 @@ impl RustyFilesystem for PassthroughFS {
 
         if let Err(e) = file.seek(SeekFrom::Start(offset)) {
             error!("seek({:?}, {}): {}", path, offset, e);
-            return callback(Err(e.raw_os_error().unwrap()));
+            return Err(e.raw_os_error().unwrap());
         }
         match file.read(unsafe { mem::transmute(data.spare_capacity_mut()) }) {
             Ok(n) => {
@@ -274,11 +266,11 @@ impl RustyFilesystem for PassthroughFS {
             }
             Err(e) => {
                 error!("read {:?}, {:#x} @ {:#x}: {}", path, size, offset, e);
-                return callback(Err(e.raw_os_error().unwrap()));
+                return Err(e.raw_os_error().unwrap());
             }
         }
 
-        callback(Ok(&data))
+        Ok(data)
     }
 
     fn write(

@@ -109,9 +109,9 @@ pub struct XTimes {
 pub type ResultEmpty = Result<(), libc::c_int>;
 pub type ResultEntry = Result<(Duration, FileAttr), libc::c_int>;
 pub type ResultOpen = Result<(u64, u32), libc::c_int>;
+pub type ResultRead = Result<Vec<u8>, libc::c_int>;
 pub type ResultReaddir = Result<Vec<DirectoryEntry>, libc::c_int>;
 pub type ResultData = Result<Vec<u8>, libc::c_int>;
-pub type ResultSlice<'a> = Result<&'a [u8], libc::c_int>;
 pub type ResultWrite = Result<u32, libc::c_int>;
 pub type ResultStatfs = Result<Statfs, libc::c_int>;
 pub type ResultCreate = Result<CreatedEntry, libc::c_int>;
@@ -122,13 +122,6 @@ pub type ResultXTimes = Result<XTimes, libc::c_int>;
 
 #[deprecated(since = "0.3.0", note = "use ResultEntry instead")]
 pub type ResultGetattr = ResultEntry;
-
-/// Dummy struct returned by the callback in the `read()` method. Cannot be constructed outside
-/// this crate, `read()` requires you to return it, thus ensuring that you don't forget to call the
-/// callback.
-pub struct CallbackResult {
-    pub(crate) _private: std::marker::PhantomData<()>,
-}
 
 /// This trait must be implemented to implement a filesystem with FuseMT.
 pub trait RustyFilesystem {
@@ -339,10 +332,8 @@ pub trait RustyFilesystem {
     /// * `fh`: file handle returned from the `open` call.
     /// * `offset`: offset into the file to start reading.
     /// * `size`: number of bytes to read.
-    /// * `callback`: a callback that must be invoked to return the result of the operation: either
-    ///    the result data as a slice, or an error code.
     ///
-    /// Return the return value from the `callback` function.
+    /// Return the bytes data as a slice, or an error code.
     fn read(
         &self,
         _req: RequestInfo,
@@ -350,9 +341,8 @@ pub trait RustyFilesystem {
         _fh: u64,
         _offset: u64,
         _size: u32,
-        callback: impl FnOnce(ResultSlice<'_>) -> CallbackResult,
-    ) -> CallbackResult {
-        callback(Err(libc::ENOSYS))
+    ) -> ResultRead {
+        Err(libc::ENOSYS)
     }
 
     /// Write to a file.

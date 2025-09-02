@@ -440,15 +440,10 @@ impl<T: RustyFilesystem + Sync + Send + 'static> fuser::Filesystem for FuseMT<T>
         let target = self.target.clone();
         let req_info = req.info();
         self.threadpool_run(move || {
-            target.read(req_info, &path, fh, offset as u64, size, |result| {
-                match result {
-                    Ok(data) => reply.data(data),
-                    Err(e) => reply.error(e),
-                }
-                CallbackResult {
-                    _private: std::marker::PhantomData {},
-                }
-            });
+            match target.read(req_info, &path, fh, offset as u64, size) {
+                Ok(data) => reply.data(&data[..]),
+                Err(e) => reply.error(e),
+            };
         });
     }
 
